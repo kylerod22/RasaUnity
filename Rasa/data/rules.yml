@@ -1,0 +1,38 @@
+version: "3.1"
+
+rules:
+
+- rule: Say hello when user says hello
+  steps:
+  - intent: greet
+  - action: utter_greet
+
+- rule: Say you're welcome
+  steps:
+  - intent: thanks
+  - action: utter_happy
+
+- rule: nav
+  steps:
+  - intent: navigation
+  - action: utter_navigation
+
+- rule: geo
+  steps:
+  - intent: geological
+  - action: utter_geological
+
+- rule: tel
+  steps:
+  - intent: telemetry
+  - action: utter_telemetry
+
+- rule: check
+  steps:
+  - intent: checklist
+  - action: utter_checklist
+
+- rule: joke
+  steps:
+  - intent: jokes
+  - action: utter_joke
