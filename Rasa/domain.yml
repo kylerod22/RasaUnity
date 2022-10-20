@@ -75,13 +75,13 @@ responses:
   - text: "NAV {nav}"
 
   utter_extern_geo:
-  - text: "GEO {nav}"
+  - text: "GEO {geo}"
 
   utter_extern_tel:
-  - text: "TEL {nav}"
+  - text: "TEL {tel}"
 
   utter_extern_check:
-  - text: "CHECK {nav}"
+  - text: "CHECK {check}"
   
 session_config:
   session_expiration_time: 60
