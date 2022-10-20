@@ -8,6 +8,46 @@ intents:
   - telemetry
   - checklist
   - jokes
+  - EXTERNAL_nav
+  - EXTERNAL_geo
+  - EXTERNAL_tel
+  - EXTERNAL_check
+
+entities:
+  - nav
+  - geo
+  - tel
+  - check
+
+slots:
+  nav:
+    type: text
+    influence_conversation: false
+    mappings:
+    - type: from_entity
+      entity: nav
+
+  geo:
+    type: text
+    influence_conversation: false
+    mappings:
+    - type: from_entity
+      entity: geo
+
+  tel:
+    type: text
+    influence_conversation: false
+    mappings:
+    - type: from_entity
+      entity: tel
+
+  check:
+    type: text
+    influence_conversation: false
+    mappings:
+    - type: from_entity
+      entity: check
+
 
 responses:
   utter_greet:
@@ -31,6 +71,18 @@ responses:
   utter_joke:
   - text: "You."
 
+  utter_extern_nav:
+  - text: "NAV {nav}"
+
+  utter_extern_geo:
+  - text: "GEO {nav}"
+
+  utter_extern_tel:
+  - text: "TEL {nav}"
+
+  utter_extern_check:
+  - text: "CHECK {nav}"
+  
 session_config:
   session_expiration_time: 60
   carry_over_slots_to_new_session: true

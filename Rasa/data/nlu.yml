@@ -66,7 +66,6 @@ nlu:
     - tell me your funniest joke
 
 
-
 # - intent: goodbye
 #   examples: |
 #     - cu

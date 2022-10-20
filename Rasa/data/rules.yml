@@ -36,3 +36,23 @@ rules:
   steps:
   - intent: jokes
   - action: utter_joke
+
+- rule: external nav
+  steps:
+  - intent: EXTERNAL_nav
+  - action: utter_extern_nav
+
+- rule: external geo
+  steps:
+  - intent: EXTERNAL_geo
+  - action: utter_extern_geo
+
+- rule: external tel
+  steps:
+  - intent: EXTERNAL_tel
+  - action: utter_extern_tel
+
+- rule: external check
+  steps:
+  - intent: EXTERNAL_check
+  - action: utter_extern_check
