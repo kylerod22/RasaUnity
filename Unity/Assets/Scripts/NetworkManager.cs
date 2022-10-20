@@ -1,5 +1,6 @@
 using System;
 using System.Collections;
+using System.Collections.Generic;
 using System.Reflection;
 using UnityEngine;
 using UnityEngine.UI;
@@ -15,6 +16,7 @@ public class NetworkManager : MonoBehaviour {
     
     // the url at which bot's custom connector is hosted
     private const string rasa_url = "http://localhost:5005/webhooks/rest/webhook";
+    private const string rasa_extern_url = "http://localhost:5005/conversations/default/trigger_intent";
 
     /// <summary>
     /// This method is called when user has entered their message and hits the send button.
@@ -31,13 +33,21 @@ public class NetworkManager : MonoBehaviour {
             sender = "user",
             message = message
         };
-        string jsonBody = JsonUtility.ToJson(postMessage);
+        string jsonBody = JsonUtility.ToJson(postMessage); 
+
+        PostTelemetry postMessage2 = new PostTelemetry {
+            name = "EXTERNAL_tel",
+            entities = new PostEntity {nav = "5", geo = "2", tel = "3", check = "4"}
+        };
+        string jsonBody2 = JsonUtility.ToJson(postMessage2);
+        print(jsonBody2);
 
         // update UI object with user message
         botUI.UpdateDisplay("user", message, "text");
 
         // Create a post request with the data to send to Rasa server
-        StartCoroutine(PostRequest(rasa_url, jsonBody));
+        StartCoroutine(PostRequest(rasa_url, jsonBody, false));
+        StartCoroutine(PostRequest(rasa_extern_url, jsonBody2, true));
     }
 
     /// <summary>
@@ -47,7 +57,7 @@ public class NetworkManager : MonoBehaviour {
     /// <param name="url">the url where Rasa server is hosted</param>
     /// <param name="jsonBody">user message serialized into a json object</param>
     /// <returns></returns>
-    private IEnumerator PostRequest (string url, string jsonBody) {
+    private IEnumerator PostRequest (string url, string jsonBody, bool external) {
         // Create a request to hit the rasa custom connector
         UnityWebRequest request = new UnityWebRequest(url, "POST");
         byte[] rawBody = new System.Text.UTF8Encoding().GetBytes(jsonBody);
@@ -59,8 +69,12 @@ public class NetworkManager : MonoBehaviour {
         yield return request.SendWebRequest();
 
         // Render the response on UI object
-        RecieveMessage(request.downloadHandler.text);
+        //RecieveMessage(request.downloadHandler.text);
+        if (!external) RecieveMessage(request.downloadHandler.text);
+        if (external) ReceiveExternalMessage(request.downloadHandler.text);
+        
     }
+    
 
 
     /// <summary>
@@ -71,7 +85,6 @@ public class NetworkManager : MonoBehaviour {
         // Deserialize response recieved from the bot
         RootMessages recieveMessages =
             JsonUtility.FromJson<RootMessages>("{\"messages\":" + response + "}");
-
         // show message based on message type on UI
         foreach (RecieveData message in recieveMessages.messages) {
             FieldInfo[] fields = typeof(RecieveData).GetFields();
@@ -87,6 +100,27 @@ public class NetworkManager : MonoBehaviour {
                 if (data != null && field.Name != "recipient_id") {
                     botUI.UpdateDisplay("bot", data, field.Name);
                 }
+            }
+        }
+    }
+
+    public void ReceiveExternalMessage(string response) {
+        print(response);
+        ReceiveExternal receivedExternal = JsonUtility.FromJson<ReceiveExternal>(response);
+        foreach (RecieveData message in receivedExternal.messages) {
+            FieldInfo[] fields = typeof(RecieveData).GetFields();
+            foreach (FieldInfo field in fields) {
+                string data = null;
+
+                // extract data from response in try-catch for handling null exceptions
+                try {
+                    data = field.GetValue(message).ToString();
+                } catch (NullReferenceException) { }
+
+                // print data
+                if (data != null && field.Name != "recipient_id") {
+                    botUI.UpdateDisplay("bot", data, field.Name);
+                } 
             }
         }
     }

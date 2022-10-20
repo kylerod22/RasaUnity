@@ -175,15 +175,17 @@ public class PostMessage {
 }
 
 [Serializable]
-public class Entity {
-    public string key;
-    public string value;
+public class PostEntity {
+    public string nav;
+    public string geo;
+    public string tel;
+    public string check;
 }
 
 [Serializable]
 public class PostTelemetry {
     public string name;
-    public List<Entity> entities;
+    public PostEntity entities;
 }
 
 /// <summary>
@@ -208,3 +210,129 @@ public class RecieveData {
 public class RootMessages {
     public RecieveData[] messages;
 }
+
+[Serializable]
+public class Slots
+{
+    public string nav;
+    public string geo;
+    public string tel;
+    public string check;
+    public object session_started_metadata;
+}
+
+[Serializable]
+public class Intent
+{
+    public string name;
+}
+
+[Serializable]
+public class Entity
+{
+    public string entity;
+    public string value;
+}
+
+[Serializable]
+public class Metadata
+{
+    public bool is_external;
+}
+
+[Serializable]
+public class LatestMessage
+{
+    public Intent intent;
+    public IList<Entity> entities;
+    public string text;
+    public object message_id;
+    public Metadata metadata;
+}
+
+[Serializable]
+public class ParseData
+{
+    public Intent intent;
+    public IList<Entity> entities;
+    public string text;
+    public object message_id;
+    public Metadata metadata;
+}
+
+[Serializable]
+public class Data
+{
+    public object elements;
+    public object quick_replies;
+    public object buttons;
+    public object attachment;
+    public object image;
+    public object custom;
+}
+
+[Serializable]
+public class Event
+{
+    public string event_name;
+    public double timestamp;
+    public Metadata metadata;
+    public string name;
+    public string policy;
+    public double? confidence;
+    public object action_text;
+    public bool hide_rule_turn;
+    public string text;
+    public ParseData parse_data;
+    public object input_channel;
+    public object message_id;
+    public string value;
+    public bool? use_text_for_featurization;
+    public Data data;
+}
+
+[Serializable]
+public class ActiveLoop
+{
+}
+
+[Serializable]
+public class LatestAction
+{
+    public string action_name;
+}
+
+[Serializable]
+public class Tracker
+{
+    public string sender_id;
+    public Slots slots;
+    public LatestMessage latest_message;
+    public double latest_event_time;
+    public object followup_action;
+    public bool paused;
+    public IList<Event> events;
+    public object latest_input_channel;
+    public ActiveLoop active_loop;
+    public LatestAction latest_action;
+    public string latest_action_name;
+}
+
+[Serializable]
+public class Message
+{
+    public string recipient_id;
+    public string text;
+}
+
+[Serializable]
+public class ReceiveExternal
+{
+    public Tracker tracker;
+    //public IList<Message> messages;
+    public RecieveData[] messages;
+}
+
+
+
+
