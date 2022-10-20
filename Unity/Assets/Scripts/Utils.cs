@@ -174,6 +174,18 @@ public class PostMessage {
     public string sender;
 }
 
+[Serializable]
+public class Entity {
+    public string key;
+    public string value;
+}
+
+[Serializable]
+public class PostTelemetry {
+    public string name;
+    public List<Entity> entities;
+}
+
 /// <summary>
 /// This class is used to deserialize the resonse json for each
 /// individual message.
